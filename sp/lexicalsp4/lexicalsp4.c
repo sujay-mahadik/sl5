@@ -21,7 +21,7 @@ tuple UST[50];
 int UST_size = 0;
 
 char *keywords[30] = {"void", "int", "float"};
-char *operators[30] = {"+", "-", ",", "."};
+char *operators[30] = {"+", "-","=", ",", "."};
 char *terminals[30] = {";", "(", ")", "{", "}"};
 
 int is_keyword(char *key){
@@ -37,7 +37,7 @@ int is_keyword(char *key){
 }
 int is_operator(char *key){
 	int i;
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 4; i++)
 	{
 		if (strcmp(key, operators[i]) == 0)
 		{	
