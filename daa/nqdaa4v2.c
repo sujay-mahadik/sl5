@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 int count = 0;
 
 int attack(int N, int board [][N], int i, int j){
@@ -44,6 +45,7 @@ int nq(int N, int board[][N], int i){
 			printf("\n");
 		}
 		printf("\n");
+		sleep(1);
 		return 0;
 	}
 	else{
