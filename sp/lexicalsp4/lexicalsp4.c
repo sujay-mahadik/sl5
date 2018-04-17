@@ -22,7 +22,7 @@ int UST_size = 0;
 
 char *keywords[30] = {"void", "int", "float"};
 char *operators[30] = {"+", "-","=", ",", "."};
-char *terminals[30] = {";", "(", ")", "{", "}"};
+char *terminals[30] = {";", "(", ")", "{", "}", "\""  };
 
 int is_keyword(char *key){
 	int i;
@@ -49,7 +49,7 @@ int is_operator(char *key){
 }
 int is_terminal(char *key){
 	int i;
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < 5; i++)
 	{
 		if (strcmp(key, terminals[i]) == 0)
 		{
@@ -60,7 +60,7 @@ int is_terminal(char *key){
 }
 int is_literal(char *key){
 	int len = strlen(key);
-	if (((key[0] == '\'' && key[len -1] == '\'')) && len > 1 )
+	if (((key[0] == '\"' || key[len-1] == '\"') ) && len>1) //corrections
 	{
 		return 1;
 	}
@@ -110,7 +110,7 @@ void insert(char *key){
 }
 
 void read(){
-	char temp [30];
+	char temp [100];
 	int temp_size = 0;
 
 	while(!feof(fp)){
@@ -118,6 +118,27 @@ void read(){
 		char buff[2];
 		buff[0] = ch;
 		buff[1] = '\0';
+
+		if (ch == '\"')
+		{	
+			temp[temp_size] = ch;
+			temp[temp_size + 1] = '\0';
+			temp_size++;
+			ch = fgetc (fp);
+			while(ch != '\"')
+			{
+			temp[temp_size] = ch;
+			temp[temp_size + 1] = '\0';
+			temp_size++;
+			ch = fgetc (fp);	
+			}
+
+			temp[temp_size] = '\"';
+			temp[temp_size+1] = '\0';
+			insert(temp);
+			temp_size = 0;
+			ch = fgetc(fp);
+		}
 
 		while((ch != ' ' && ch != '\n' && ch != '\t') && !feof(fp)){
 			if (is_operator(buff) || is_terminal(buff))
@@ -130,12 +151,12 @@ void read(){
 				temp_size = 0;
 				break;
 			}
-			if (is_literal(temp))
-			{
-				insert(temp);
-				temp[0] = '\0';
-				temp_size = 0;
-			}
+			// if (is_literal(temp))
+			// {
+			// 	insert(temp);
+			// 	temp[0] = '\0';
+			// 	temp_size = 0;
+			// }
 			temp[temp_size] = ch;
 			temp[temp_size + 1] ='\0';
 			temp_size++;
